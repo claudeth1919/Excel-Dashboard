@@ -16,7 +16,14 @@ namespace Excel_Dashboard
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            try
+            {
+                Application.Run(new Main());
+            }
+            catch
+            {
+
+            }
         }
     }
 }

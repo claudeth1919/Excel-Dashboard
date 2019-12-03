@@ -8,3 +8,4 @@ C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashb
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.exe
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.pdb
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel_Dashboard.Main.resources
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel_Dashboard.Loading.resources
