@@ -27,11 +27,18 @@ namespace Excel_Dashboard
         private void Initialize()
         {
             this.Width = Screen.PrimaryScreen.Bounds.Width;
-            this.Height = Screen.PrimaryScreen.Bounds.Height;
-            this.Panel.Height = Screen.PrimaryScreen.Bounds.Height;
-            this.Panel.Width = Screen.PrimaryScreen.Bounds.Width-10;
+            this.Height = Screen.PrimaryScreen.Bounds.Height-30;
+
+            this.PanelHeader.Width = this.Width - 30;
+
+            //this.Panel.Height = this.Height - 35;
+            this.Panel.Height = this.Height - 70;
+            this.Panel.Width = this.Width - 30;//25
             //this.WindowState = FormWindowState.Maximized;
+            //this.Panel.AutoScroll = false;
+            //this.Panel.HorizontalScroll.Enabled = false;
             this.Panel.AutoScroll = true;
+
             Loading loadWindow = new Loading();
             loadWindow.Show();
             SetInformation();
@@ -74,7 +81,39 @@ namespace Excel_Dashboard
 
         private void SetInformation()
         {
-            List<Column> data = ExcelUtil.GetData();
+            string filePath = Utils.CURRENT_PATH;
+            DirectoryInfo d = new DirectoryInfo(Utils.CURRENT_PATH);
+            FileInfo[] Files = d.GetFiles("*.xlsx");
+            List<string> excelNames = new List<string>();
+            foreach (FileInfo file in Files)
+            {
+                if (file.Name.IndexOf("~$") == -1)
+                {
+                    excelNames.Add(file.Name);
+                }
+            }
+            List<List<Column>> tempLists = new List<List<Column>>();
+            foreach (string excelName in excelNames)
+            {
+                string strRandom = Utils.RandomString(9);
+                string copyFilePath = $@"{filePath}\temp\{strRandom}{excelName}";
+                string tempFolder = $@"{filePath}\temp";
+                Utils.CreateFolder(tempFolder);
+                filePath = filePath + '\\' + excelName;
+                File.Copy(filePath, copyFilePath);
+                tempLists.Add(ExcelUtil.GetData(copyFilePath));
+            }
+
+            List<Column> data = new List<Column>();
+            if (tempLists.Count == 0) return;
+            foreach (List<Column> list in tempLists)
+            {
+                foreach (Column item in list)
+                {
+                    data.Add(item);
+                }
+            }
+            if (data.Count == 0) return;
 
             if (isAlreadyInitialize)
             {
@@ -98,7 +137,7 @@ namespace Excel_Dashboard
                 Width = Panel.Width
             };
 
-            int padingSpace = (int)Panel.Width / Utils.COL_NUMBERS;
+            int padingSpace = (int)(Panel.Width-9) / Utils.COL_NUMBERS;
             Label header_1 = new Label
             {
                 Text = $"FOLIO",
@@ -179,7 +218,7 @@ namespace Excel_Dashboard
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            flowItemHeader.Controls.Add(header_1);
+            //flowItemHeader.Controls.Add(header_1);
             flowItemHeader.Controls.Add(header_2);
             flowItemHeader.Controls.Add(header_3);
             flowItemHeader.Controls.Add(header_4);
@@ -189,16 +228,9 @@ namespace Excel_Dashboard
             flowItemHeader.Controls.Add(header_8);
 
             
-            if (isAlreadyInitialize)
+            if (!isAlreadyInitialize)
             {
-                this.Panel.Invoke(new MethodInvoker(delegate
-                {
-                    this.Panel.Controls.Add(flowItemHeader);
-                }));
-            }
-            else
-            {
-                this.Panel.Controls.Add(flowItemHeader);
+                this.PanelHeader.Controls.Add(flowItemHeader);
             }
 
             int col_numbers = Utils.COL_NUMBERS;
@@ -292,7 +324,7 @@ namespace Excel_Dashboard
                     TextAlign = ContentAlignment.MiddleCenter
                 };
 
-                flowItem.Controls.Add(item_1);
+                //flowItem.Controls.Add(item_1);
                 flowItem.Controls.Add(item_2);
                 flowItem.Controls.Add(item_3);
                 flowItem.Controls.Add(item_4);

@@ -1,0 +1,10 @@
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\bin\Release\Excel Dashboard.exe.config
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\bin\Release\Excel Dashboard.exe
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\bin\Release\Excel Dashboard.pdb
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel_Dashboard.Loading.resources
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel_Dashboard.Main.resources
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel_Dashboard.Properties.Resources.resources
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel Dashboard.csproj.GenerateResource.cache
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel Dashboard.csproj.CoreCompileInputs.cache
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel Dashboard.exe
+C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Release\Excel Dashboard.pdb

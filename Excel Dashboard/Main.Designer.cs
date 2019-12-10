@@ -29,14 +29,22 @@ namespace Excel_Dashboard
         private void InitializeComponent()
         {
             this.Panel = new System.Windows.Forms.FlowLayoutPanel();
+            this.PanelHeader = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // Panel
             // 
-            this.Panel.Location = new System.Drawing.Point(12, 12);
+            this.Panel.Location = new System.Drawing.Point(10, 49);
             this.Panel.Name = "Panel";
             this.Panel.Size = new System.Drawing.Size(200, 100);
             this.Panel.TabIndex = 0;
+            // 
+            // PanelHeader
+            // 
+            this.PanelHeader.Location = new System.Drawing.Point(10, 2);
+            this.PanelHeader.Name = "PanelHeader";
+            this.PanelHeader.Size = new System.Drawing.Size(200, 41);
+            this.PanelHeader.TabIndex = 1;
             // 
             // Main
             // 
@@ -44,6 +52,7 @@ namespace Excel_Dashboard
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(533, 292);
+            this.Controls.Add(this.PanelHeader);
             this.Controls.Add(this.Panel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -56,6 +65,7 @@ namespace Excel_Dashboard
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel Panel;
+        private System.Windows.Forms.FlowLayoutPanel PanelHeader;
     }
 }
 

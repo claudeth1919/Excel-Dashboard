@@ -26,33 +26,16 @@ namespace Excel_Dashboard
         private const int MIN_COLUMNS_GENERAL_AMOUNT = 4;
         
 
-        public static Excel.Workbook OpenWorkbook()
+        public static Excel.Workbook OpenWorkbook(String excelPath)
         {
             Excel.Application app = new Excel.Application();
             //app.Visible = true;
             //app.EnableAnimations = false;
-            string filePath = Utils.CURRENT_PATH;
-            DirectoryInfo d = new DirectoryInfo(Utils.CURRENT_PATH);
-            FileInfo[] Files = d.GetFiles("*.xlsx");
-            string excelName = String.Empty;
-            foreach (FileInfo file in Files)
-            {
-                if (file.Name.IndexOf("~$")==-1)
-                {
-                    excelName = file.Name;
-                }
-            }
+           
             Excel.Workbook workbook;
-            string strRandom = Utils.RandomString(9);
-            string copyFilePath = $@"{filePath}\temp\{strRandom}{excelName}";
-            tempFolder = $@"{filePath}\temp";
-            Utils.CreateFolder(tempFolder);
-            filePath = filePath + '\\' + excelName;
-            currentExcelOpenPath = copyFilePath;
-            File.Copy(filePath, copyFilePath);
             try
             {
-                workbook = app.Workbooks.Open(copyFilePath, UpdateLinks: 0, ReadOnly: true);
+                workbook = app.Workbooks.Open(excelPath, UpdateLinks: 0, ReadOnly: true);
             }
             catch (Exception e)
             {
@@ -61,14 +44,14 @@ namespace Excel_Dashboard
             return workbook;
         }
 
-        public static List<Column> GetData()
+        public static List<Column> GetData(String excelPath)
         {
             List<string> errorList = new List<string>();
             Excel.Application app = new Excel.Application();
             Excel.Workbook workbook;
             try
             {
-                workbook = OpenWorkbook();
+                workbook = OpenWorkbook(excelPath);
             }
             catch
             {
@@ -127,8 +110,9 @@ namespace Excel_Dashboard
                 
             }
             currentIndex = currentIndex+2;
-            bool isFinish = false;
-            for (int rowIndex = currentIndex; rowIndex <= rowCount; rowIndex++)
+            //bool isFinish = false;
+            //for (int rowIndex = currentIndex; rowIndex <= rowCount; rowIndex++)
+            for (int rowIndex = rowCount; rowIndex >= currentIndex; rowIndex--)
             {
                 Column col = new Column();
                 var dynamicFolio = String.Empty;
@@ -151,8 +135,15 @@ namespace Excel_Dashboard
                     //
                 }
 
-
-                var dynamicNombre = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.NOMBRE_CLIENTE)).Index].Value;
+                var dynamicNombre = String.Empty;
+                try
+                {
+                    dynamicNombre = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.NOMBRE_CLIENTE)).Index].Value;
+                }
+                catch
+                {
+                    //
+                }
 
 
                 var dynamicZona = String.Empty;
@@ -185,7 +176,8 @@ namespace Excel_Dashboard
                     //
                 }
 
-                var dynamicSalida = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.SALIDA)).Index].Value;
+                int salidaIndex = headercolumns.Find(x => Utils.IsLike(x.Name, Utils.SALIDA)).Index;
+                var dynamicSalida = range.Cells[rowIndex, salidaIndex].Value;
                 
 
                 var dynamicEstatusCargando = String.Empty;
@@ -256,11 +248,7 @@ namespace Excel_Dashboard
 
                     datos.Add(col);
                 }
-                if (nombre.IndexOf('/')!=-1)
-                {
-                    if (isFinish) break;
-                    else isFinish = true;
-                }
+                if (nombre.IndexOf('/') != -1) break;
             }
 
             GC.Collect();

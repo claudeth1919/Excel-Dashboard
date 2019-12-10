@@ -20,6 +20,7 @@ namespace Excel_Dashboard
         public static string UNIDAD = "UNIDAD";
         public static string CHOFER = "CHOFER";
         public static string SALIDA = "SALIDA";
+        public static string ESTATUS = "ESTATUS";
         public static string ESTATUS_CARGANDO = "CARGANDO";
         public static string ESTATUS_TRAYECTO = "TRAYECTO";
         public static string ESTATUS_ENTREGADO = "TREGADO";
@@ -30,7 +31,7 @@ namespace Excel_Dashboard
         public static Font CONTENT_FONT = new System.Drawing.Font("Arial Narrow", 12, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         public static Color HEADER_COLOR = System.Drawing.Color.AntiqueWhite;
         public static Color CONTENT_COLOR = System.Drawing.Color.White;
-        public static int COL_NUMBERS = 8;
+        public static int COL_NUMBERS = 7;
 
         public static readonly string CURRENT_PATH = Path.GetDirectoryName(Application.ExecutablePath);
         public static int ROW_HEIGHT = 40;
