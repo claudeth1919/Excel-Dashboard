@@ -19,11 +19,11 @@ namespace Excel_Dashboard
         private static string tempFolder = String.Empty;
         private const int MIN_COLUMNS_BOM_AMOUNT = 2;
         private const int MIN_COLUMNS_WH_AMOUNT = 5;
-        private const int HEADER_COLUMN_TOLERANCE = 4;
+        private const int HEADER_COLUMN_TOLERANCE = 5;
         private const int EMPTINESS_ROW_TOLERANCE = 5; //Usado
         private const int NORMAL_COLUMN_AMOUNT = 22;
 
-        private const int MIN_COLUMNS_GENERAL_AMOUNT = 4;
+        private const int MIN_COLUMNS_GENERAL_AMOUNT = 6;
         
 
         public static Excel.Workbook OpenWorkbook(String excelPath)
@@ -115,100 +115,17 @@ namespace Excel_Dashboard
             for (int rowIndex = rowCount; rowIndex >= currentIndex; rowIndex--)
             {
                 Column col = new Column();
-                var dynamicFolio = String.Empty;
-                try
-                {
-                    dynamicFolio = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.FOLIO)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicTicket = String.Empty;
-                try
-                {
-                    dynamicTicket = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.TICKET)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicNombre = String.Empty;
-                try
-                {
-                    dynamicNombre = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.NOMBRE_CLIENTE)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-
-                var dynamicZona = String.Empty;
-                try
-                {
-                    dynamicZona = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.ZONA)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicUnidad = String.Empty;
-                try
-                {
-                    dynamicUnidad = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.UNIDAD)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicChofer = String.Empty;
-                try
-                {
-                    dynamicChofer = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.CHOFER)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                int salidaIndex = headercolumns.Find(x => Utils.IsLike(x.Name, Utils.SALIDA)).Index;
-                var dynamicSalida = range.Cells[rowIndex, salidaIndex].Value;
-                
-
-                var dynamicEstatusCargando = String.Empty;
-                try
-                {
-                    dynamicEstatusCargando = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.ESTATUS_CARGANDO)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicEstatusTrayecto = String.Empty;
-                try
-                {
-                    dynamicEstatusTrayecto = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.ESTATUS_TRAYECTO)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
-
-                var dynamicEstatusEntregado = String.Empty;
-                try
-                {
-                    dynamicEstatusEntregado = range.Cells[rowIndex, headercolumns.Find(x => Utils.IsLike(x.Name, Utils.ESTATUS_ENTREGADO)).Index].Value;
-                }
-                catch
-                {
-                    //
-                }
+                var dynamicFolio = GetDataFromCell(rowIndex, headercolumns, Utils.FOLIO, range).Value;
+                var dynamicTicket = GetDataFromCell(rowIndex, headercolumns, Utils.TICKET, range).Value; 
+                var dynamicNombre = GetDataFromCell(rowIndex, headercolumns, Utils.NOMBRE_CLIENTE, range).Value;
+                var dynamicZona = GetDataFromCell(rowIndex, headercolumns, Utils.ZONA, range).Value;
+                var dynamicUnidad = GetDataFromCell(rowIndex, headercolumns, Utils.UNIDAD, range).Value;
+                var dynamicChofer = GetDataFromCell(rowIndex, headercolumns, Utils.CHOFER, range).Value;
+                var dynamicSalida = GetDataFromCell(rowIndex, headercolumns, Utils.SALIDA, range).Value;
+                var dynamicEstatusCargando = GetDataFromCell(rowIndex, headercolumns, Utils.ESTATUS_CARGANDO, range).Value;
+                var dynamicEstatusTrayecto = GetDataFromCell(rowIndex, headercolumns, Utils.ESTATUS_TRAYECTO, range).Value;
+                var dynamicEstatusEntregado = GetDataFromCell(rowIndex, headercolumns, Utils.ESTATUS_ENTREGADO, range).Value;
+                var dynamicEstatus = GetDataFromCell(rowIndex, headercolumns, Utils.ESTATUS, range).Value;
 
                 string folio = Utils.ConvertDynamicToString(dynamicFolio);
                 string ticket = Utils.ConvertDynamicToString(dynamicTicket);
@@ -220,6 +137,7 @@ namespace Excel_Dashboard
                 string estatusCargando = Utils.ConvertDynamicToString(dynamicEstatusCargando);
                 string estatusTrayecto = Utils.ConvertDynamicToString(dynamicEstatusTrayecto);
                 string estatusEntregado = Utils.ConvertDynamicToString(dynamicEstatusEntregado);
+                string estatus = Utils.ConvertDynamicToString(dynamicEstatus);
 
 
                 if (!Utils.IsEmptyString(ticket))
@@ -248,7 +166,7 @@ namespace Excel_Dashboard
 
                     datos.Add(col);
                 }
-                if (nombre.IndexOf('/') != -1) break;
+                if (nombre.IndexOf('/') != -1 ) break;
             }
 
             GC.Collect();
@@ -269,5 +187,23 @@ namespace Excel_Dashboard
             return datos;
         }
 
+        private static dynamic GetDataFromCell(int rowIndex, List<Header> headercolumns, List<string> keyWords, Excel.Range range)
+        {
+            int colIndex = -1;
+            try
+            {
+                colIndex = headercolumns.Find(x => Utils.IsLikeStringList(x.Name, keyWords)).Index;
+            }
+            catch
+            {
+                //
+            }
+            if (colIndex == -1) return new { Value ="", Value2 = "" };
+            else
+            {
+                var dynamicInfo = range.Cells[rowIndex, colIndex];
+                return dynamicInfo;
+            }
+        }
     }
 }

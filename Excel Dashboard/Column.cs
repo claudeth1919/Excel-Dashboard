@@ -15,6 +15,7 @@ namespace Excel_Dashboard
         private string unidad;
         private string chofer;
         private string salida;
+        private string estatus;
         private string estatusCargando;
         private string estatusTrayecto;
         private string estatusEntregado;
@@ -77,6 +78,12 @@ namespace Excel_Dashboard
         {
             get { return estatusEntregado; }
             set { estatusEntregado = value; }
+        }
+
+        public string Estatus
+        {
+            get { return estatus; }
+            set { estatus = value; }
         }
     }
 }

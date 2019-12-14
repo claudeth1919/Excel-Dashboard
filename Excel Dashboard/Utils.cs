@@ -13,17 +13,20 @@ namespace Excel_Dashboard
 {
     public static class Utils
     {
-        public static string FOLIO = "FOLIO";
-        public static string TICKET = "FACTURA";
-        public static string NOMBRE_CLIENTE = "NOMBRE";
-        public static string ZONA = "ZONA";
-        public static string UNIDAD = "UNIDAD";
-        public static string CHOFER = "CHOFER";
-        public static string SALIDA = "SALIDA";
-        public static string ESTATUS = "ESTATUS";
-        public static string ESTATUS_CARGANDO = "CARGANDO";
-        public static string ESTATUS_TRAYECTO = "TRAYECTO";
-        public static string ESTATUS_ENTREGADO = "TREGADO";
+        public static List<string> FOLIO = new List<string>() { "FOLIO"};
+        public static List<string> TICKET = new List<string>() { "FACTURA" };
+        public static List<string> NOMBRE_CLIENTE = new List<string>() { "NOMBRE" };
+        public static List<string> ZONA = new List<string>() { "LUGAR","ZONA" };
+        public static List<string> UNIDAD = new List<string>() { "VEHCULO", "UNIDAD" };
+        public static List<string> CHOFER = new List<string>() { "CHOFER" };
+        public static List<string> SALIDA = new List<string>() { "SALIDA" };
+        public static List<string> ESTATUS = new List<string>() { "ESTATUS" };
+        public static List<string> ESTATUS_CARGANDO = new List<string>() { "CARGANDO" };
+        public static List<string> ESTATUS_TRAYECTO = new List<string>() { "TRAYECTO" };
+        public static List<string> ESTATUS_ENTREGADO = new List<string>() { "TREGADO" };
+
+
+        public static string STOP_EXCEL_CONSTRUMA = "NOMBREDELCLIENTE";
 
         private static Random random = new Random();
 
@@ -36,6 +39,7 @@ namespace Excel_Dashboard
         public static readonly string CURRENT_PATH = Path.GetDirectoryName(Application.ExecutablePath);
         public static int ROW_HEIGHT = 40;
 
+
         public static bool IsLike(string completeString, string conteinedString)
         {
             completeString = NormalizeString(completeString);
@@ -44,6 +48,16 @@ namespace Excel_Dashboard
             {
                 return true;
             }
+            return false;
+        }
+
+        public static bool IsLikeStringList(string completeString, List<string> conteinedPossibleStringList)
+        {
+            foreach (string conteinedString in conteinedPossibleStringList)
+            {
+                if (IsLike(completeString, conteinedString)) return true;
+            }
+
             return false;
         }
 

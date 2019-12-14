@@ -81,7 +81,6 @@ namespace Excel_Dashboard
 
         private void SetInformation()
         {
-            string filePath = Utils.CURRENT_PATH;
             DirectoryInfo d = new DirectoryInfo(Utils.CURRENT_PATH);
             FileInfo[] Files = d.GetFiles("*.xlsx");
             List<string> excelNames = new List<string>();
@@ -95,6 +94,7 @@ namespace Excel_Dashboard
             List<List<Column>> tempLists = new List<List<Column>>();
             foreach (string excelName in excelNames)
             {
+                string filePath = Utils.CURRENT_PATH;
                 string strRandom = Utils.RandomString(9);
                 string copyFilePath = $@"{filePath}\temp\{strRandom}{excelName}";
                 string tempFolder = $@"{filePath}\temp";
@@ -312,8 +312,8 @@ namespace Excel_Dashboard
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
-
                 string status = !Utils.IsEmptyString(item.EstatusEntregado) ? "Entregado" : (!Utils.IsEmptyString(item.EstatusTrayecto) ? "En Trayecto" : (!Utils.IsEmptyString(item.EstatusCargando) ? "Cargando" : ""));
+                if (!Utils.IsEmptyString(item.Estatus)) status = item.Estatus;
                 Label item_8 = new Label
                 {
                     Text = $"{status}",
