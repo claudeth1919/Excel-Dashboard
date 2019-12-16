@@ -16,7 +16,6 @@ namespace Excel_Dashboard
     public static class ExcelUtil
     {
         private static string currentExcelOpenPath = String.Empty;
-        private static string tempFolder = String.Empty;
         private const int MIN_COLUMNS_BOM_AMOUNT = 2;
         private const int MIN_COLUMNS_WH_AMOUNT = 5;
         private const int HEADER_COLUMN_TOLERANCE = 5;
@@ -163,6 +162,7 @@ namespace Excel_Dashboard
                     col.EstatusCargando = estatusCargando;
                     col.EstatusTrayecto = estatusTrayecto;
                     col.EstatusEntregado = estatusEntregado;
+                    col.Estatus = estatus;
 
                     datos.Add(col);
                 }
@@ -181,8 +181,8 @@ namespace Excel_Dashboard
             app.Quit();
             Marshal.ReleaseComObject(app);
 
-            Utils.DeleteFileIfExist(currentExcelOpenPath);
-            Utils.DeleteFolderIfExist(tempFolder);
+            //Utils.DeleteFileIfExist(currentExcelOpenPath);
+            Utils.DeleteFolderIfExist(Utils.CURRENT_PATH+ @"\temp\");
 
             return datos;
         }
@@ -190,14 +190,19 @@ namespace Excel_Dashboard
         private static dynamic GetDataFromCell(int rowIndex, List<Header> headercolumns, List<string> keyWords, Excel.Range range)
         {
             int colIndex = -1;
-            try
+            foreach (string keyWord in keyWords)
             {
-                colIndex = headercolumns.Find(x => Utils.IsLikeStringList(x.Name, keyWords)).Index;
+                try
+                {
+                    colIndex = headercolumns.Find(x => Utils.IsLike(x.Name, keyWord)).Index;
+                }
+                catch
+                {
+                    colIndex = -1;
+                }
+                if (colIndex != -1) break;
             }
-            catch
-            {
-                //
-            }
+           
             if (colIndex == -1) return new { Value ="", Value2 = "" };
             else
             {

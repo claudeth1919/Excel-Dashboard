@@ -16,7 +16,8 @@ namespace Excel_Dashboard
         public static List<string> FOLIO = new List<string>() { "FOLIO"};
         public static List<string> TICKET = new List<string>() { "FACTURA" };
         public static List<string> NOMBRE_CLIENTE = new List<string>() { "NOMBRE" };
-        public static List<string> ZONA = new List<string>() { "LUGAR","ZONA" };
+        public static string ZONE = "ZONA";
+        public static List<string> ZONA = new List<string>() { "LUGAR", ZONE };
         public static List<string> UNIDAD = new List<string>() { "VEHCULO", "UNIDAD" };
         public static List<string> CHOFER = new List<string>() { "CHOFER" };
         public static List<string> SALIDA = new List<string>() { "SALIDA" };

@@ -22,7 +22,7 @@ namespace Excel_Dashboard
             }
             catch
             {
-
+                MessageBox.Show("Error al abrir el programa checa que los excels estén correctos", "Error al abrir el programa checa que los excels estén correctos");
             }
         }
     }

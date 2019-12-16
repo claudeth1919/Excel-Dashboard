@@ -16,6 +16,10 @@ namespace Excel_Dashboard
     {
         private bool isAlreadyInitialize = false;
         private FileSystemWatcher fileSystemWatcher;
+        private int padingSpace;
+        private DateTime lastFileUpdateDate = DateTime.Today;
+        private List<Column> data = new List<Column>();
+        //private int bandera = 0;
         public Main()
         {
             InitializeComponent();
@@ -38,15 +42,17 @@ namespace Excel_Dashboard
             //this.Panel.AutoScroll = false;
             //this.Panel.HorizontalScroll.Enabled = false;
             this.Panel.AutoScroll = true;
+            padingSpace = (int)(Panel.Width - 9) / Utils.COL_NUMBERS;
 
             Loading loadWindow = new Loading();
             loadWindow.Show();
-            SetInformation();
+            data = GetData();
+            SetInformation(data);
             loadWindow.Close();
 
             fileSystemWatcher = new FileSystemWatcher();
-            fileSystemWatcher.Changed += FileSystemWatcher_Changed;
             fileSystemWatcher.Path = Utils.CURRENT_PATH;
+            fileSystemWatcher.Changed += FileSystemWatcher_Changed;
             fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
             fileSystemWatcher.IncludeSubdirectories = false;
             //fileSystemWatcher.Filter= "*.xlsx*";
@@ -60,16 +66,22 @@ namespace Excel_Dashboard
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            /*string fileNameChange = e.Name;
-            if (fileNameChange.IndexOf(".xlsx")!=-1)
-            {
-                SetInformation();
-            }*/
+            string changedFile = GetLastUpdatedFile();
             try
             {
-                fileSystemWatcher.EnableRaisingEvents = false;
-                string fileNameChange = e.Name;
-                SetInformation();
+                //fileSystemWatcher.EnableRaisingEvents = false;
+                if (changedFile != String.Empty)
+                {
+                    //System.Threading.Thread.Sleep(3000);
+                    List<Column> updatedData = GetData(changedFile);
+                    foreach (Column col in updatedData)
+                    {
+                        int index = this.data.FindIndex(x=> x.Ticket == col.Ticket);
+                        if (index != -1) this.data[index] = col;
+                        else this.data.Add(col);
+                    }
+                    SetInformation(this.data);
+                }
             }
             finally
             {
@@ -78,41 +90,28 @@ namespace Excel_Dashboard
             
         }
 
-
-        private void SetInformation()
+        private string GetLastUpdatedFile()
         {
+            FileInfo lastUpdatedFile = null;
             DirectoryInfo d = new DirectoryInfo(Utils.CURRENT_PATH);
             FileInfo[] Files = d.GetFiles("*.xlsx");
-            List<string> excelNames = new List<string>();
-            foreach (FileInfo file in Files)
-            {
-                if (file.Name.IndexOf("~$") == -1)
-                {
-                    excelNames.Add(file.Name);
-                }
+            lastUpdatedFile = Files.OrderByDescending(x => x.LastWriteTime).Where(x=> x.Name.IndexOf("~$") == -1).FirstOrDefault();
+            if (lastUpdatedFile == null) return String.Empty;
+            if (DateTime.Compare(lastUpdatedFile.LastWriteTime,lastFileUpdateDate) > 0 /*&& bandera >= 4*/) //Checa si hay un cambio en los archivos después de ejecutatse el programa
+            {//De ser así guarda ese cambio para que sea comparado después
+                //bandera = 0;
+                lastFileUpdateDate = lastUpdatedFile.LastWriteTime;
             }
-            List<List<Column>> tempLists = new List<List<Column>>();
-            foreach (string excelName in excelNames)
-            {
-                string filePath = Utils.CURRENT_PATH;
-                string strRandom = Utils.RandomString(9);
-                string copyFilePath = $@"{filePath}\temp\{strRandom}{excelName}";
-                string tempFolder = $@"{filePath}\temp";
-                Utils.CreateFolder(tempFolder);
-                filePath = filePath + '\\' + excelName;
-                File.Copy(filePath, copyFilePath);
-                tempLists.Add(ExcelUtil.GetData(copyFilePath));
+            else
+            {//De no ser así significa que el cambio no es de ninguno de los archivos xlsxque nos interesa
+                //bandera++;
+                return String.Empty;
             }
+            return lastUpdatedFile.Name;
+        }
 
-            List<Column> data = new List<Column>();
-            if (tempLists.Count == 0) return;
-            foreach (List<Column> list in tempLists)
-            {
-                foreach (Column item in list)
-                {
-                    data.Add(item);
-                }
-            }
+        private void SetInformation(List<Column> data)
+        {
             if (data.Count == 0) return;
 
             if (isAlreadyInitialize)
@@ -130,110 +129,12 @@ namespace Excel_Dashboard
                 return;
             }
 
-            FlowLayoutPanel flowItemHeader = new FlowLayoutPanel
-            {
-                FlowDirection = FlowDirection.LeftToRight,
-                Height = 40,
-                Width = Panel.Width
-            };
-
-            int padingSpace = (int)(Panel.Width-9) / Utils.COL_NUMBERS;
-            Label header_1 = new Label
-            {
-                Text = $"FOLIO",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_2 = new Label
-            {
-                Text = $"TICKET",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_3 = new Label
-            {
-                Text = $"NOMBRE DEL CLIENTE",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_4 = new Label
-            {
-                Text = $"ZONE",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_5 = new Label
-            {
-                Text = $"UNIDAD",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_6 = new Label
-            {
-                Text = $"CHOFER",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_7 = new Label
-            {
-                Text = $"H/SALIDA",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            Label header_8 = new Label
-            {
-                Text = $"ESTATUS",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
-                Font = Utils.HEADER_FONT,
-                ForeColor = Utils.HEADER_COLOR,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            //flowItemHeader.Controls.Add(header_1);
-            flowItemHeader.Controls.Add(header_2);
-            flowItemHeader.Controls.Add(header_3);
-            flowItemHeader.Controls.Add(header_4);
-            flowItemHeader.Controls.Add(header_5);
-            flowItemHeader.Controls.Add(header_6);
-            flowItemHeader.Controls.Add(header_7);
-            flowItemHeader.Controls.Add(header_8);
-
+            FlowLayoutPanel flowItemHeader = GetHeaderLayout();
             
             if (!isAlreadyInitialize)
             {
                 this.PanelHeader.Controls.Add(flowItemHeader);
             }
-
-            int col_numbers = Utils.COL_NUMBERS;
 
             foreach (Column item in data)
             {
@@ -347,5 +248,169 @@ namespace Excel_Dashboard
 
             }
         }
+        private List<Column> GetData()
+        {
+            List<List<Column>> tempLists = new List<List<Column>>();
+            List<Column> data = new List<Column>();
+            
+            DirectoryInfo d = new DirectoryInfo(Utils.CURRENT_PATH);
+            FileInfo[] Files = d.GetFiles("*.xlsx");
+            List<string> excelNames = new List<string>();
+            foreach (FileInfo file in Files)
+            {
+                if (file.Name.IndexOf("~$") == -1)
+                {
+                    excelNames.Add(file.Name);
+                }
+            }
+            foreach (string excelName in excelNames)
+            {
+                string filePath = Utils.CURRENT_PATH;
+                string strRandom = Utils.RandomString(9);
+                string copyFilePath = $@"{filePath}\temp\{strRandom}{excelName}";
+                string tempFolder = $@"{filePath}\temp";
+                Utils.CreateFolder(tempFolder);
+                filePath = filePath + '\\' + excelName;
+                File.Copy(filePath, copyFilePath);
+                tempLists.Add(ExcelUtil.GetData(copyFilePath));
+            }
+
+            foreach (List<Column> list in tempLists)
+            {
+                foreach (Column item in list)
+                {
+                    data.Add(item);
+                }
+            }
+            return data;
+        }
+
+        private List<Column> GetData(string originExcelFile)
+        {
+            List<List<Column>> tempLists = new List<List<Column>>();
+            List<Column> data = new List<Column>();
+
+            string filePath = Utils.CURRENT_PATH;
+            string strRandom = Utils.RandomString(9);
+            string copyFilePath = $@"{filePath}\temp\{strRandom}{originExcelFile}";
+            string tempFolder = $@"{filePath}\temp";
+            Utils.CreateFolder(tempFolder);
+            filePath = filePath + '\\' + originExcelFile;
+            File.Copy(filePath, copyFilePath);
+            tempLists.Add(ExcelUtil.GetData(copyFilePath));
+
+            foreach (List<Column> list in tempLists)
+            {
+                foreach (Column item in list)
+                {
+                    data.Add(item);
+                }
+            }
+            return data;
+        }
+
+
+        private FlowLayoutPanel GetHeaderLayout()
+        {
+            FlowLayoutPanel flowItemHeader = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                Height = 40,
+                Width = Panel.Width
+            };
+
+            int padingSpace = (int)(Panel.Width - 9) / Utils.COL_NUMBERS;
+            Label header_1 = new Label
+            {
+                Text = $"FOLIO",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_2 = new Label
+            {
+                Text = $"TICKET",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_3 = new Label
+            {
+                Text = $"NOMBRE DEL CLIENTE",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_4 = new Label
+            {
+                Text = $"ZONE",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_5 = new Label
+            {
+                Text = $"UNIDAD",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_6 = new Label
+            {
+                Text = $"CHOFER",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_7 = new Label
+            {
+                Text = $"H/SALIDA",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label header_8 = new Label
+            {
+                Text = $"ESTATUS",
+                Width = padingSpace - 10,
+                Height = Utils.ROW_HEIGHT,
+                Font = Utils.HEADER_FONT,
+                ForeColor = Utils.HEADER_COLOR,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            //flowItemHeader.Controls.Add(header_1);
+            flowItemHeader.Controls.Add(header_2);
+            flowItemHeader.Controls.Add(header_3);
+            flowItemHeader.Controls.Add(header_4);
+            flowItemHeader.Controls.Add(header_5);
+            flowItemHeader.Controls.Add(header_6);
+            flowItemHeader.Controls.Add(header_7);
+            flowItemHeader.Controls.Add(header_8);
+            return flowItemHeader;
+        }
+
     }
+    
 }
