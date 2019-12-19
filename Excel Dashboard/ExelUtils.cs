@@ -43,7 +43,7 @@ namespace Excel_Dashboard
             return workbook;
         }
 
-        public static List<Column> GetData(String excelPath)
+        public static List<Column> GetData(String excelPath, String excelName)
         {
             List<string> errorList = new List<string>();
             Excel.Application app = new Excel.Application();
@@ -163,7 +163,7 @@ namespace Excel_Dashboard
                     col.EstatusTrayecto = estatusTrayecto;
                     col.EstatusEntregado = estatusEntregado;
                     col.Estatus = estatus;
-
+                    col.ExcelOrigen = excelName;
                     datos.Add(col);
                 }
                 if (nombre.IndexOf('/') != -1 ) break;

@@ -19,6 +19,7 @@ namespace Excel_Dashboard
         private string estatusCargando;
         private string estatusTrayecto;
         private string estatusEntregado;
+        private string excelOrigen;
 
         public string Folio
         {
@@ -26,6 +27,11 @@ namespace Excel_Dashboard
             set { folio = value; }
         }
 
+        public string ExcelOrigen
+        {
+            get { return excelOrigen; }
+            set { excelOrigen = value; }
+        }
         public string Ticket
         {
             get { return ticket; }

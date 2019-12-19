@@ -74,11 +74,10 @@ namespace Excel_Dashboard
                 {
                     //System.Threading.Thread.Sleep(3000);
                     List<Column> updatedData = GetData(changedFile);
+                    this.data.RemoveAll(x => x.ExcelOrigen == changedFile);
                     foreach (Column col in updatedData)
                     {
-                        int index = this.data.FindIndex(x=> x.Ticket == col.Ticket);
-                        if (index != -1) this.data[index] = col;
-                        else this.data.Add(col);
+                        this.data.Add(col);
                     }
                     SetInformation(this.data);
                 }
@@ -272,7 +271,7 @@ namespace Excel_Dashboard
                 Utils.CreateFolder(tempFolder);
                 filePath = filePath + '\\' + excelName;
                 File.Copy(filePath, copyFilePath);
-                tempLists.Add(ExcelUtil.GetData(copyFilePath));
+                tempLists.Add(ExcelUtil.GetData(copyFilePath, excelName));
             }
 
             foreach (List<Column> list in tempLists)
@@ -297,7 +296,7 @@ namespace Excel_Dashboard
             Utils.CreateFolder(tempFolder);
             filePath = filePath + '\\' + originExcelFile;
             File.Copy(filePath, copyFilePath);
-            tempLists.Add(ExcelUtil.GetData(copyFilePath));
+            tempLists.Add(ExcelUtil.GetData(copyFilePath, originExcelFile));
 
             foreach (List<Column> list in tempLists)
             {
