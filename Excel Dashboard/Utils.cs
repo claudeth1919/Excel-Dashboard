@@ -32,7 +32,7 @@ namespace Excel_Dashboard
         private static Random random = new Random();
 
         public static Font HEADER_FONT = new System.Drawing.Font("Arial Narrow", 12, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        public static Font CONTENT_FONT = new System.Drawing.Font("Arial Narrow", 12, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        public static Font CONTENT_FONT = new System.Drawing.Font("Arial Narrow", 12, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         public static Color HEADER_COLOR = System.Drawing.Color.AntiqueWhite;
         public static Color CONTENT_COLOR = System.Drawing.Color.White;
         public static int COL_NUMBERS = 7;

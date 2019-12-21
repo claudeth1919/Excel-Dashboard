@@ -98,5 +98,8 @@
   <ItemGroup>
     <None Include="resources\logo_invertido.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\logo_invertido_2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

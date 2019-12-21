@@ -19,6 +19,8 @@ namespace Excel_Dashboard
         private int padingSpace;
         private DateTime lastFileUpdateDate = DateTime.Today;
         private List<Column> data = new List<Column>();
+        private System.Timers.Timer timer = new System.Timers.Timer();
+        private bool isSubiendo = false;
         //private int bandera = 0;
         public Main()
         {
@@ -30,6 +32,7 @@ namespace Excel_Dashboard
 
         private void Initialize()
         {
+            
             this.Width = Screen.PrimaryScreen.Bounds.Width;
             this.Height = Screen.PrimaryScreen.Bounds.Height-30;
 
@@ -60,6 +63,13 @@ namespace Excel_Dashboard
             // You must add this line - this allows events to fire.
             fileSystemWatcher.EnableRaisingEvents = true;
             isAlreadyInitialize = true;
+            //Timer begin
+            timer.Interval = 370;
+
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+            //Timer end
         }
 
         #endregion
@@ -87,6 +97,35 @@ namespace Excel_Dashboard
                 fileSystemWatcher.EnableRaisingEvents = true;
             }
             
+        }
+
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            int distancia = 1;
+            int locationY = 0;
+            if (!isSubiendo)
+            {
+                locationY += distancia;
+            }
+            else
+            {
+                locationY -= distancia;
+            }
+            this.Panel.Invoke(new MethodInvoker(delegate
+            {
+                try
+                {
+                    this.Panel.VerticalScroll.Value += locationY;
+                }
+                catch
+                {
+
+                }
+            }));
+            int diffMax = (this.Panel.VerticalScroll.Maximum - this.Panel.VerticalScroll.LargeChange + 1);
+            if (this.Panel.VerticalScroll.Minimum == this.Panel.VerticalScroll.Value) isSubiendo = false;
+            else if (diffMax == (this.Panel.VerticalScroll.Value)) isSubiendo = true;
+
         }
 
         private string GetLastUpdatedFile()
@@ -141,6 +180,7 @@ namespace Excel_Dashboard
                 {
                     FlowDirection = FlowDirection.LeftToRight,
                     Height = Utils.ROW_HEIGHT,
+                    BackColor = Color.Transparent,
                     Width = Panel.Width
                 };
                 Label item_1 = new Label
@@ -149,6 +189,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -159,6 +200,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -169,6 +211,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -179,6 +222,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -189,6 +233,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -199,6 +244,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -209,6 +255,7 @@ namespace Excel_Dashboard
                     Width = padingSpace - 10,
                     Height = Utils.ROW_HEIGHT,
                     Font = Utils.CONTENT_FONT,
+                    BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };

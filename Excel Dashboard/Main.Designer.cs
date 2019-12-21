@@ -28,16 +28,9 @@ namespace Excel_Dashboard
         /// </summary>
         private void InitializeComponent()
         {
-            this.Panel = new System.Windows.Forms.FlowLayoutPanel();
             this.PanelHeader = new System.Windows.Forms.FlowLayoutPanel();
+            this.Panel = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
-            // 
-            // Panel
-            // 
-            this.Panel.Location = new System.Drawing.Point(10, 49);
-            this.Panel.Name = "Panel";
-            this.Panel.Size = new System.Drawing.Size(200, 100);
-            this.Panel.TabIndex = 0;
             // 
             // PanelHeader
             // 
@@ -45,6 +38,15 @@ namespace Excel_Dashboard
             this.PanelHeader.Name = "PanelHeader";
             this.PanelHeader.Size = new System.Drawing.Size(200, 41);
             this.PanelHeader.TabIndex = 1;
+            // 
+            // Panel
+            // 
+            this.Panel.BackgroundImage = global::Excel_Dashboard.Properties.Resources.logo_invertido;
+            this.Panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Panel.Location = new System.Drawing.Point(10, 49);
+            this.Panel.Name = "Panel";
+            this.Panel.Size = new System.Drawing.Size(200, 100);
+            this.Panel.TabIndex = 0;
             // 
             // Main
             // 
