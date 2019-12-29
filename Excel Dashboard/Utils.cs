@@ -36,7 +36,7 @@ namespace Excel_Dashboard
         public static Color HEADER_COLOR = System.Drawing.Color.AntiqueWhite;
         public static Color CONTENT_COLOR = System.Drawing.Color.White;
         public static int COL_NUMBERS = 7;
-        public static int ROW_NUMBERS = 14;
+        public static int ROW_NUMBERS = 13;
 
         public static readonly string CURRENT_PATH = Path.GetDirectoryName(Application.ExecutablePath);
         public static int ROW_HEIGHT = 40;

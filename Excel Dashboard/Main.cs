@@ -98,6 +98,7 @@ namespace Excel_Dashboard
             itemLayoutHeigh = this.Panel.Height / Utils.ROW_NUMBERS;
             itemLayoutSmallWidth = (int)(itemLayoutWidth * 0.65);
             itemLayoutExtraWidth = (int)((itemLayoutWidth * 1.9) / 2);
+            this.PanelHeader.Height = itemLayoutHeigh;
         }
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
