@@ -21,6 +21,16 @@ namespace Excel_Dashboard
         private List<Column> data = new List<Column>();
         private System.Timers.Timer timer = new System.Timers.Timer();
         private bool isSubiendo = false;
+        private int itemLayoutWidth;
+        private int itemLayoutSmallWidth;
+        private int itemLayoutExtraWidth;
+        private int itemLayoutHeigh;
+        private Image backupImage;
+        private int currentFormWidthSize;
+        private int currentFormHeighSize;
+        private const int WM_SYSCOMMAND = 0x0112;
+        private const int SC_MINIMIZE = 0xF020;
+        private const int WM_SYSCOMMAND_1 = 0x0112; // WM_SYSCOMMAND
         //private int bandera = 0;
         public Main()
         {
@@ -36,16 +46,10 @@ namespace Excel_Dashboard
             this.Width = Screen.PrimaryScreen.Bounds.Width;
             this.Height = Screen.PrimaryScreen.Bounds.Height-30;
 
-            this.PanelHeader.Width = this.Width - 30;
 
-            //this.Panel.Height = this.Height - 35;
-            this.Panel.Height = this.Height - 70;
-            this.Panel.Width = this.Width - 30;//25
-            //this.WindowState = FormWindowState.Maximized;
-            //this.Panel.AutoScroll = false;
-            //this.Panel.HorizontalScroll.Enabled = false;
-            this.Panel.AutoScroll = true;
-            padingSpace = (int)(Panel.Width - 9) / Utils.COL_NUMBERS;
+            SetSizeSettings();
+
+            backupImage = (Image) Panel.BackgroundImage.Clone();
 
             Loading loadWindow = new Loading();
             loadWindow.Show();
@@ -64,7 +68,7 @@ namespace Excel_Dashboard
             fileSystemWatcher.EnableRaisingEvents = true;
             isAlreadyInitialize = true;
             //Timer begin
-            timer.Interval = 370;
+            timer.Interval = 180;
 
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
@@ -73,6 +77,28 @@ namespace Excel_Dashboard
         }
 
         #endregion
+
+
+        private void SetSizeSettings()
+        {
+            currentFormWidthSize = this.Width;
+            currentFormHeighSize = this.Height;
+
+            this.PanelHeader.Width = this.Width - 30;
+
+            //this.Panel.Height = this.Height - 35;
+            this.Panel.Height = this.Height - 70;
+            this.Panel.Width = this.Width - 30;//25
+            //this.WindowState = FormWindowState.Maximized;
+            //this.Panel.AutoScroll = false;
+            //this.Panel.HorizontalScroll.Enabled = false;
+            this.Panel.AutoScroll = true;
+            padingSpace = (int)(Panel.Width - 9) / Utils.COL_NUMBERS;
+            itemLayoutWidth = padingSpace - 8;
+            itemLayoutHeigh = this.Panel.Height / Utils.ROW_NUMBERS;
+            itemLayoutSmallWidth = (int)(itemLayoutWidth * 0.65);
+            itemLayoutExtraWidth = (int)((itemLayoutWidth * 1.9) / 2);
+        }
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
@@ -157,6 +183,7 @@ namespace Excel_Dashboard
                 this.Panel.Invoke(new MethodInvoker(delegate
                 {
                     Panel.Controls.Clear();
+                    PanelHeader.Controls.Clear();
                 }));
             }
 
@@ -173,32 +200,41 @@ namespace Excel_Dashboard
             {
                 this.PanelHeader.Controls.Add(flowItemHeader);
             }
-
+            else
+            {
+                this.PanelHeader.Invoke(new MethodInvoker(delegate
+                {
+                    this.PanelHeader.Controls.Add(flowItemHeader);
+                }));
+            }
+            
             foreach (Column item in data)
             {
                 FlowLayoutPanel flowItem = new FlowLayoutPanel
                 {
                     FlowDirection = FlowDirection.LeftToRight,
-                    Height = Utils.ROW_HEIGHT,
+                    Height = itemLayoutHeigh,
                     BackColor = Color.Transparent,
                     Width = Panel.Width
                 };
+                /*
                 Label item_1 = new Label
                 {
                     Text = $"{item.Folio}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutSmallWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
+                */
 
                 Label item_2 = new Label
                 {
                     Text = $"{item.Ticket}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutSmallWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -208,8 +244,8 @@ namespace Excel_Dashboard
                 Label item_3 = new Label
                 {
                     Text = $"{item.NombreCliente}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutWidth + itemLayoutExtraWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -219,8 +255,8 @@ namespace Excel_Dashboard
                 Label item_4 = new Label
                 {
                     Text = $"{item.Zona}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutWidth + itemLayoutExtraWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -230,8 +266,8 @@ namespace Excel_Dashboard
                 Label item_5 = new Label
                 {
                     Text = $"{item.Unidad}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutSmallWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -241,8 +277,8 @@ namespace Excel_Dashboard
                 Label item_6 = new Label
                 {
                     Text = $"{item.Chofer}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutSmallWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -252,8 +288,8 @@ namespace Excel_Dashboard
                 Label item_7 = new Label
                 {
                     Text = $"{item.Salida}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutWidth / 2,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     BackColor = Color.Transparent,
                     ForeColor = Utils.CONTENT_COLOR,
@@ -264,8 +300,8 @@ namespace Excel_Dashboard
                 Label item_8 = new Label
                 {
                     Text = $"{status}",
-                    Width = padingSpace - 10,
-                    Height = Utils.ROW_HEIGHT,
+                    Width = itemLayoutSmallWidth,
+                    Height = itemLayoutHeigh,
                     Font = Utils.CONTENT_FONT,
                     ForeColor = Utils.CONTENT_COLOR,
                     TextAlign = ContentAlignment.MiddleCenter
@@ -361,26 +397,27 @@ namespace Excel_Dashboard
             FlowLayoutPanel flowItemHeader = new FlowLayoutPanel
             {
                 FlowDirection = FlowDirection.LeftToRight,
-                Height = 40,
+                Height = itemLayoutHeigh,
                 Width = Panel.Width
             };
 
-            int padingSpace = (int)(Panel.Width - 9) / Utils.COL_NUMBERS;
+            /*
             Label header_1 = new Label
             {
                 Text = $"FOLIO",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutSmallWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
             };
+            */
 
             Label header_2 = new Label
             {
                 Text = $"TICKET",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutSmallWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -389,8 +426,8 @@ namespace Excel_Dashboard
             Label header_3 = new Label
             {
                 Text = $"NOMBRE DEL CLIENTE",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutWidth + itemLayoutExtraWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -399,8 +436,8 @@ namespace Excel_Dashboard
             Label header_4 = new Label
             {
                 Text = $"ZONE",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutWidth + itemLayoutExtraWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -409,8 +446,8 @@ namespace Excel_Dashboard
             Label header_5 = new Label
             {
                 Text = $"UNIDAD",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutSmallWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -419,8 +456,8 @@ namespace Excel_Dashboard
             Label header_6 = new Label
             {
                 Text = $"CHOFER",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutSmallWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -429,8 +466,8 @@ namespace Excel_Dashboard
             Label header_7 = new Label
             {
                 Text = $"H/SALIDA",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutWidth / 2,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
@@ -439,13 +476,20 @@ namespace Excel_Dashboard
             Label header_8 = new Label
             {
                 Text = $"ESTATUS",
-                Width = padingSpace - 10,
-                Height = Utils.ROW_HEIGHT,
+                Width = itemLayoutSmallWidth,
+                Height = itemLayoutHeigh,
                 Font = Utils.HEADER_FONT,
                 ForeColor = Utils.HEADER_COLOR,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-
+            header_2.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_3.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_4.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_5.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_6.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_7.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            header_8.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
+            flowItemHeader.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
             //flowItemHeader.Controls.Add(header_1);
             flowItemHeader.Controls.Add(header_2);
             flowItemHeader.Controls.Add(header_3);
@@ -457,6 +501,57 @@ namespace Excel_Dashboard
             return flowItemHeader;
         }
 
+        private void ResizeEnd_Event(object sender, EventArgs e)
+        {
+            Control c = (Control)sender;
+            if(currentFormWidthSize!= c.Size.Width || currentFormHeighSize != c.Size.Height)
+            {
+                currentFormWidthSize = c.Size.Width;
+                currentFormHeighSize = c.Size.Height;
+                ResizeForm();
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            if (m.Msg == WM_SYSCOMMAND) // WM_SYSCOMMAND
+            {
+                // Check your window state here
+                if (m.WParam == new IntPtr(0xF030)) // Maximize event - SC_MAXIMIZE from Winuser.h
+                {
+                    currentFormWidthSize = this.Width;
+                    currentFormHeighSize = this.Height;
+                    ResizeForm();
+                }
+                int command = m.WParam.ToInt32() & 0xfff0;
+                if (command == SC_MINIMIZE)
+                {
+                    currentFormWidthSize = this.Width;
+                    currentFormHeighSize = this.Height;
+                    ResizeForm();
+                }
+
+            }
+        }
+
+        private void ResizeForm()
+        {
+            SetSizeSettings();
+            SetInformation(this.data);
+        }
+
+        private void DoubleClick_Event(object sender, EventArgs e)
+        {
+            if (Panel.BackgroundImage != null)
+            {
+                Panel.BackgroundImage = null;
+            }
+            else
+            {
+                Panel.BackgroundImage = backupImage;
+            }
+        }
     }
     
 }

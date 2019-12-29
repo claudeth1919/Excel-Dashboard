@@ -9,3 +9,14 @@ C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashb
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.exe
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.pdb
 C:\Users\Ivan\source\repos\Excel Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.csprojAssemblyReference.cache
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\bin\Debug\Excel Dashboard.exe.config
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\bin\Debug\Excel Dashboard.exe
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\bin\Debug\Excel Dashboard.pdb
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.csprojAssemblyReference.cache
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel_Dashboard.Loading.resources
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel_Dashboard.Main.resources
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel_Dashboard.Properties.Resources.resources
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.csproj.GenerateResource.cache
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.exe
+C:\Users\Usuario\source\Excel-Dashboard\Excel Dashboard\obj\Debug\Excel Dashboard.pdb

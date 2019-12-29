@@ -38,6 +38,7 @@ namespace Excel_Dashboard
             this.PanelHeader.Name = "PanelHeader";
             this.PanelHeader.Size = new System.Drawing.Size(200, 41);
             this.PanelHeader.TabIndex = 1;
+            this.PanelHeader.DoubleClick += new System.EventHandler(this.DoubleClick_Event);
             // 
             // Panel
             // 
@@ -60,6 +61,7 @@ namespace Excel_Dashboard
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Main";
             this.Text = "Dashboard";
+            this.ResizeEnd += new System.EventHandler(this.ResizeEnd_Event);
             this.ResumeLayout(false);
 
         }
